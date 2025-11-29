@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const sequelize = require('./config/database');
-const { Usuario, Viaje, UsuarioViaje, Itinerario, Calendario, Recomendacion, Tour } = require('./models');
+const { Usuario, Viaje, UsuarioViaje, Itinerario, Calendario, Recomendacion, Tour, Frase } = require('./models');
 
 const runSeed = async () => {
   try {
@@ -287,12 +287,37 @@ await Recomendacion.bulkCreate([...recomendacionesViaje1, ...recomendacionesViaj
       }
     ]);
 
+    const frases = [
+      // Inglés
+      { idioma: 'en', categoria: 'Saludos', original: 'Hello', traduccion: 'Hola' },
+      { idioma: 'en', categoria: 'Saludos', original: 'Good morning', traduccion: 'Buenos días' },
+      { idioma: 'en', categoria: 'Transporte', original: 'Where is the bus stop?', traduccion: '¿Dónde está la parada de autobús?' },
+      { idioma: 'en', categoria: 'Emergencia', original: 'I need a doctor', traduccion: 'Necesito un médico' },
+
+      // Francés
+      { idioma: 'fr', categoria: 'Saludos', original: 'Bonjour', traduccion: 'Buenos días / Hola' },
+      { idioma: 'fr', categoria: 'Restaurante', original: 'La carte, s’il vous plaît', traduccion: 'El menú, por favor' },
+      { idioma: 'fr', categoria: 'Emergencia', original: 'Appelez une ambulance', traduccion: 'Llame a una ambulancia' },
+
+      // Italiano
+      { idioma: 'it', categoria: 'Saludos', original: 'Buongiorno', traduccion: 'Buenos días' },
+      { idioma: 'it', categoria: 'Restaurante', original: 'Il conto, per favore', traduccion: 'La cuenta, por favor' },
+      { idioma: 'it', categoria: 'Transporte', original: 'Dove è la stazione?', traduccion: '¿Dónde está la estación?' }
+    ];
+
+    // Validación y log para detectar problemas
+    const created = await Frase.bulkCreate(frases, { validate: true });
+    console.log(`Frases creadas: ${created.length}`);
+
+
+
     console.log('Seed ejecutado correctamente');
     process.exit();
   } catch (error) {
     console.error('Error en el seed:', error);
     process.exit(1);
-  }
+  };
+
 };
 
 runSeed();
